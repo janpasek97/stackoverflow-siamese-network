@@ -1,0 +1,112 @@
+\paragraph{}
+A Stackoverflow is one of Stackexchange's community platforms, which is designated for programmers. It provides a space to ask questions and get answers from other members of the community. At the beginning of July 2019, the page contained more than 45 million questions and answers, which makes the Stackoverflow being considered as the biggest programming discussion platform.
+
+\paragraph{}
+Not only does the Stackoverflow store an enormous knowledge base, but the site also hides valuable hand-tagged data that can be used for machine learning. More precisely, users can mark two questions as duplicates so that it warns the others that there may be a desired solution already available. However, the interesting part thereof are the duplicate links themself. Thanks to them, the Stack Overflow data can be used to create a dataset for the semantic similarity task (section \ref{semantic_similarity_tasks}). Utilization of the duplicates for learning a sentence encoding is an aim of this work and will be focused in the subsequent chapters.
+
+\paragraph{}
+This chapter is structured as follows. Firstly a detailed description of the data source is given. Later the chapter discusses the structure of the data dump and presents essential data statistics. Finally, a short discussion about alternative data sources takes its place.  
+
+\section{Data Source}
+\paragraph{}
+
+The export of the complete Stackoverflow website is available at \url{www.archive.org/details/stackexchange}. The work uses a page dump from the beginning of July 2019. Therefore the information stated by this work is related to this date. The export comes logically separated in eight compressed XML files, each carrying different information. The individual parts and their sizes (compressed) are listed below:
+
+\begin{itemize}
+	\setlength\itemsep{0.03em}
+	\item badges (242.7 MB) - gained honors
+	\item comments (4.2 GB) - user comments
+	\item post history (25.0 GB) - history of posts
+	\item \textbf{post links} (84.7 MB) - relationship links between the posts
+	\item \textbf{posts} (14.3 GB) - all questions and answers
+	\item tags (797.9 KB) - tags that can be associated with the posts
+	\item users (504.8 MB) - profiles of page users
+	\item votes (1.1 GB) - votes for the posts
+\end{itemize} 
+
+Only the post links and posts (both outlined using a bold font in the listing) thereof are used for assembling the dataset. A detailed description of the export parts relevant to the dataset is provided in the following section.
+
+\section{Data Dump Structure}
+\paragraph{}
+As stated in the previous section, the Stackoverflow dump comes in XML files. Since not all the fields available in the XML are necessary, only the relevant ones are chosen to be further processed. A field listing of the posts and post links exports with the selected fields highlighted can be found below:
+
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`$=3\catcode`_=8}]
+\textbf{posts.xml}
+	\textit{\textbf{- Id}}
+	\textit{\textbf{- PostTypeId    }  }  	
+		-> 1: Question
+		-> 2: Answer
+	- ParentID (only present if PostTypeId is 2)
+	- AcceptedAnswerId (only present if PostTypeId is 1)
+	- CreationDate
+	- Score
+	- ViewCount
+	\textit{\textbf{- Body}}
+	- OwnerUserId
+	- LastEditorUserId
+	- LastEditorDisplayName
+	- LastEditDate
+	- LastActivityDate
+	- CommunityOwnedDate
+	- ClosedDate
+	\textit{\textbf{- Title}}
+	- Tags
+	- AnswerCount
+	- CommentCount
+	- FavoriteCounts
+\end{Verbatim}
+
+\begin{Verbatim}[commandchars=\\\{\},codes={\catcode`$=3\catcode`_=8}]
+\textbf{postlinks.xml}
+	\textit{\textbf{- Id}}
+	\textit{\textbf{- CreationDate}}
+	\textit{\textbf{- PostId}}
+	\textit{\textbf{- RelatedPostId}}
+	\textit{\textbf{- PostLinkTypeId}}
+		-> 1: Linked
+		-> 3: Duplicate
+\end{Verbatim}
+
+From the listing above, it can be seen that the linking of the duplicates is done using a post link record with $PostLinkTypeID = 3$. Each post link has its unique identifier (\textit{Id}) and is assigned to one of the related posts via a unique identifier of the post (\textit{PostId}). The second post in the relationship is also determined by its identifier (\textit{RelatedPostId}). 
+
+\paragraph{}
+From the post attributes, the most important fields are \textit{Id}, \textit{PostTypeId}, \textit{Body} and the \textit{Title}. Worth mentioning is that the \textit{Body} attribute contains a formatted content of the post in an HTML.
+
+\section{Data Statistics}
+\paragraph{}
+Table \ref{data_source_counts_analysis} shows document counts in different categories of the data. The first four of them are basic categories defined by a separation of the data source. The last four of them (separated by a horizontal line) are derived categories that are subsets of the posts.
+
+\paragraph{}
+From the table, it can be seen that the overall number of posts is around 45 million. 17.8 million of thereof are the questions, which are the point of interest in this work. Moreover, around 491 thousands of pairs of questions are the duplicates that will form a basis of the entire dataset. Another significant property observed in the data is that $76.6\%$ of the questions contain a code snippet (body of the post contains an HTML tag "<code>").
+
+\begin{table}[h!]
+	\begin{center}
+		\begin{tabular}{l r} 
+			\hline
+			\textbf{Dataset part} & \textbf{Number of samples} \\ [0.5ex] 
+			\hline\hline
+			comments & 74 003 667 \\ 
+			users & 10 640 388 \\ 
+			post links & 5 600 831 \\ 
+			posts & 45 069 473 \\
+			\hline
+			questions & 17 786 242 \\
+			questions containing a code snippet & 13 628 089 \\
+			questions with an accepted answer & 9 362 222 \\
+			duplicate pairs of questions & 491 337 \\
+			\hline
+		\end{tabular}
+	\end{center}
+	\caption{Example counts in different document categories in the Stackoverflow data dump. Below the horizontal divider are derived categories that are subsets of the "posts" category.}
+	\label{data_source_counts_analysis}
+\end{table}
+
+\section{Other Data Sources}
+\paragraph{}
+Besides the Stackoverflow duplicate questions, other data sources exist as well. One of the alternative data sources can be even obtained from the Stackoverflow dump by extracting pairs made up of questions and their corresponding accepted answers. The idea behind that is to use the accepted answers to predict whether the post is an answer to the given question.
+
+\paragraph{}
+Alternatively, the size of the current dataset might be enlarged with data from the remaining 173 webpages of the Stackexchange platform. That would bring more complexity into the dataset since each page focuses on a different topic such as 3D printing or math. Furthermore, variants of few Stackexchange pages exist in languages other than English.
+
+\paragraph{}
+Apart from the Stackexchange, there are other similar web pages, such as Quora. That page was already utilized to create a Quora Question Pairs dataset consisting of approximately 404 thousands of training examples. A training objective of the dataset is to predict whether two questions are duplicates or not. The dataset can be accessed on \url{https://www.kaggle.com/c/quora-question-pairs}.

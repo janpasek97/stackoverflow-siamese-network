@@ -1,0 +1,141 @@
+\paragraph{}
+This appendix briefly describes implemented scripts and libraries that are used for the realization of the work. The scripts and utilities are organized into subchapters that correspond to a top-level repository structure. The scripts are accessible at:\\ \url{https://github.com/janpasek97/stackoverflow-siamese-network}.
+
+\section{Used Libraries}
+\paragraph{}
+A complete list of libraries/packages and their versions necessary to run the scripts is in a file \textit{requirements.txt} in the root of the repository. This section states only the most important ones only.
+
+\begin{itemize}
+	\item \textbf{bs4} - stripping HTML tags from the post bodies
+	\item \textbf{elasticsearch-dsl} - object-like access to Elasticsearch indices
+	\item \textbf{html5lib} - stripping HTML tags from the post bodies (used by bs4)
+	\item \textbf{matplotlib} - plotting graphs and confusion matrices
+	\item \textbf{numpy} - vector computation (required by tensorflow)
+	\item \textbf{pandas} - csv file operations and analysis
+	\item \textbf{tensorflow} - neural network framework
+	\item \textbf{tensorflow-datasets} - SNLI dataset source
+	\item \textbf{tensorflow-hub} - pre-trained Word2Vec embeddings
+	\item \textbf{gensim} - Word2Vec model training 
+	\item \textbf{django} - framework for demonstration web application
+\end{itemize}
+
+\section{Data}
+\paragraph{}
+The \textit{data} directory contains scripts and configuration files for indexing the data into the Elasticsearch instance and accessing them using the \textit{elasticsearch-dsl} library.
+
+\subsubsection{index\_config - *.conf}
+\paragraph{}
+The directory \textit{index\_conf} contains five \textit{*.conf} Logstash pipeline configuration files. These pipelines are used for indexing the Stackoveflow dump into the Elasticsearch indices.  
+
+\subsubsection{documents.py}
+\paragraph{}
+The file \textit{documents.py} contains class definitions for the \textit{elasticsearch-dsl} library to be able to access the Elasticsearch documents as objects.
+
+\section{Dataset}
+\paragraph{}
+The directory \textit{dataset} contains scripts for assembling, exporting and cleaning the dataset.
+
+\subsubsection{dataset\_cleanup.py}
+\paragraph{}
+The script cleans invalid links from the Elasticsearch indices and removes an assignment of all documents to dataset groups.
+
+\subsubsection{make\_ds.py}
+\paragraph{}
+The script \textit{make\_ds.py} takes care of assembling the dataset. The script is separated into more parts since the process takes a long time. Therefore it shall be possible to restart the work from some point. A result of the script is a CSV file with post id pairs and labels. The procedure of creating the dataset is explained in chapter \ref{dataset}.
+
+\subsubsection{export\_dataset\_text.py}
+\paragraph{}
+The script takes a CSV file with format "\textit{first\_post\_id, second\_post\_id, label}" and outputs two CSV files. The first CSV has a format "\textit{first\_post\_text, second\_post\_text, label}" and the second one has a format "\textit{first\_post\_code, second\_post\_code, label}". The exported text and code is preprocessed and ready to be tokenized on spaces without any additional preprocessing.
+
+\subsubsection{shuffle\_and\_split.py}
+\paragraph{}
+Provides functionality to shuffle the dataset and split it into three parts - train, dev, test. The module is used by \textit{make\_ds.py}.
+
+\section{Network}
+\paragraph{}
+The directory \textit{network} encapsulates all functionality that is necessary to create and train the neural network models.
+
+\subsubsection{assets}
+\paragraph{}
+The directory \textit{assets} contains the dataset exports, Word2Vec embedding matrices and word to dictionary index translation maps.
+
+\subsubsection{checkpoints}
+\paragraph{}
+The directory \textit{checkpoints} is expected to contain folders with checkpoints of the individual models. The subdirectories shall follow the naming convention "\textit{modelname\_loss}", since the script \textit{evaluate\_model.py} expects the model's checkpoint to be stored in such a directory.
+
+\subsubsection{logs}
+\paragraph{}
+The directory \textit{logs} contains all training logs for a Tensorboard.
+
+\subsubsection{losses/f1\_loss.py}
+\paragraph{}
+An f1 loss implementation as a child class of \textit{tf.keras.losses.Loss}. The implementation is based on \cite{f1_loss}.
+
+\subsubsection{metrics}
+\paragraph{}
+The directory \textit{metrics} contains a custom implementation of a confusion matrix and f1 score, which is an enhanced version of the original Tensorflow code. Both implemented metrics are child classes of \textit{tf.keras.metrics.Metric}.
+
+\subsubsection{models}
+\paragraph{}
+The directory \textit{models} contains definitions of the proposed models as a child class of \textit{tf.keras.Model}.
+
+\subsubsection{utils}
+\paragraph{}
+The directory \textit{utils} contains many scripts with various  functionality. These are, for example, configurations of the available models, text and code pre-processing scripts and dataset generators.
+
+\subsubsection{evaluate\_model.py}
+\paragraph{}
+The script \textit{evaluate\_model.py} creates the model selected by a command line parameter and loads its weights from the latest checkpoint. The created model is used for evaluating an accuracy, f1 score and confusion matrix on a test dataset.
+
+\subsubsection{main.py}
+\paragraph{}
+The script \textit{main.py} is used for training the models on the Stackoverflow dataset. It creates dataset generators, configures training callbacks and starts the training. The model to be trained, as well as the used loss function, is selected using command line parameters.
+
+\subsubsection{snli\_baseline.py}
+\paragraph{}
+The script \textit{snli\_baseline.py} is used for training the models on the SNLI dataset. It creates dataset generators, configures training callbacks and starts the training. The model to be trained, as well as the used loss function, is selected using command line parameters.
+
+
+\section{Word2Vec}
+\paragraph{}
+The directory \textit{word2vec} contains scripts for creating a text/code corpus and training the Word2Vec embeddings on the Stackoverflow data.
+
+\subsubsection{create\_code\_word2vec\_ds.py}
+\paragraph{}
+Creates a training corpus for training the Word2Vec embeddings of code tokens. The corpus consists of cleaned code snippets from all the Stackoverflow posts. An output of the script is a \textit{.txt} file, where each line represents one training example.
+
+\subsubsection{create\_text\_word2vec\_ds.py}
+\paragraph{}
+Creates a training corpus for training the Word2Vec embeddings of textual tokens. The corpus consists of cleaned texts from all the Stackoverflow posts. An output of the script is a \textit{.txt} file, where each line represents one training example.
+
+\subsubsection{create\_dictionaries\_and\_embedding.py}
+\paragraph{}
+Exports an embedding dictionary and embedding matrix from an output of the Gensim Word2Vec model.
+
+\subsubsection{train\_word2vec.py}
+\paragraph{}
+Train Word2Vec embeddings on a given corpus using the Gensim library.
+
+\section{Web}
+\paragraph{}
+The directory \textit{web} contains source code of the demonstration web application (appendix \ref{demo_app}). The application is based on the Django framework. The following text describes the most important source code files and folders.
+
+\subsubsection{SiameseSearchWeb/settings.py}
+\paragraph{}
+The file \textit{settings.py} contains settings of the Django application such as available middleware modules, an URL configuration, path to static files and templates, et cetera.
+
+\subsubsection{search/views.py}
+\paragraph{}
+The file \textit{views.py} contains the code of all application views. Usually, each view is represented by a function that queries an Elasticsearch database and renders the corresponding template which is returned in an HTTP response.
+
+\subsubsection{search/search.py}
+\paragraph{}
+The file \textit{search.py} implements functions for running full-text searches over the Stackoverflow data. Furthermore, in the future, it will implement the search based on obtained vector representations of the questions.
+
+\subsubsection{search/static}
+\paragraph{}
+The directory \textit{static} contains all CSS, javascript and image files used by the application.
+
+\subsubsection{search/templates}
+\paragraph{}
+The directory \textit{templates} contains all Django templates used by the application.

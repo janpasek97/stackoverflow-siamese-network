@@ -1,0 +1,159 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Vzor pro sazbu kvalifikační práce
+%
+% Západočeská univerzita v Plzni
+% Fakulta aplikovaných věd
+% Katedra informatiky a výpočetní techniky
+%
+% Petr Lobaz, lobaz@kiv.zcu.cz, 2016/03/14
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Možné jazyky práce: czech, english
+% Možné typy práce: BP (bakalářská), DP (diplomová)
+\documentclass[english,BP]{thesiskiv}
+
+% Definujte údaje pro vstupní strany
+%
+% Jméno a příjmení; kvůli textu prohlášení určete, 
+% zda jde o mužské, nebo ženské jméno.
+\author{Jan Pašek}
+\declarationmale
+
+%alternativa: 
+%\declarationfemale
+
+% Název práce
+\title{Learning of Sentence Encoding by Using Duplicate Questions from Stackoverflow}
+
+% 
+% Texty abstraktů (anglicky, česky)
+%
+\abstracttexten{This bachelor thesis aims to create a neural network for natural language understanding in expert domains. Our outcome can significantly improve tasks such as information retrieval or code generation. The work proposes a neural network architecture utilizing a code encoder in parallel with a commonly used text encoder. Furthermore, the architecture uses a not widely known \textit{f1 loss}, significantly improving results. An important outcome of this work is a vector representation of text stored in hidden layers of the network. We demonstrate our approach on Stackoverflow data utilizing duplicate questions to create a novel dataset, usable beyond the scope of this work. Our architecture achieved \textit{f1 score} of 74.1\% , which is a 5.1\% improvement compared to a baseline model based on word embedding summation.}
+
+\abstracttextcz{Tato bakalářská práce se zabývá vývojem neuronové sítě pro porozumění textu v odborném jazyce. Výstupy této práce mohou zlepšit výsledky úloh jako je získávání informací či generování zdrojového kódu. Pro vyřešení této úlohy představujeme novou architekturu neuronové sítě založenou na využití enkodéru kódu společně s textovým enkodérem. Architektura dále využívá nepříliš známou \textit{f1 loss}, která významně zlepšuje dosažené výsledky. Důležitým výstupem této práce je vektorová reprezentace vět, která se nalézá ve skrytých vrstavách neuronové sítě. Navržený přístup je demonstrován na využití duplicitních otázek ze stránky Stackoverflow, ze kterých jsme připravili nový dataset použitelný nad rámec této práce. Pomocí navržené architektury bylo na datasetu dosaženo \textit{f1 score} 74.1 \%, což představuje zlepšení o 5.1 \% v porovnání s výchozí architekturou založenou na sčítání reprezentací slov.}
+
+% Na titulní stranu a do textu prohlášení se automaticky vkládá 
+% aktuální rok, resp. datum. Můžete je změnit:
+%\titlepageyear{2020}
+%\declarationdate{1. března 2016}
+
+% Ve zvláštních případech je možné ovlivnit i ostatní texty:
+%
+\university{University of West Bohemia}
+\faculty{Faculty of Applied Sciences}
+\department{Department of Computer Science and Engineering}
+\subject{Bachelor Thesis}
+\titlepagetown{Pilsen}
+\declarationtown{Pilsen}
+\acknowledgement{\smallskip \indent I would like to thank Ing. Miloslav Konopik, Ph.D. for valuable advice, factual comments and helpfulness in consultation and elaboration of the bachelor thesis.
+
+\bigskip The work was supported from European Regional Development Fund-Project "CERIT Scientific Cloud" (No. CZ.02.1.01/0.0/0.0/16\_013/000180\\2).}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% DODATEČNÉ BALÍČKY PRO SAZBU
+% Jejich užívání či neužívání záleží na libovůli autora 
+% práce
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+% Zařadit literaturu do obsahu
+\usepackage[nottoc,notlot,notlof]{tocbibind}
+
+% Umožňuje vkládání obrázků
+\usepackage[pdftex]{graphicx}
+
+% Odkazy v PDF jsou aktivní; navíc se automaticky vkládá
+% balíček 'url', který umožňuje např. dělení slov
+% uvnitř URL
+\usepackage[pdftex]{hyperref}
+\hypersetup{colorlinks=true,
+  unicode=true,
+  linkcolor=black,
+  citecolor=black,
+  urlcolor=black,
+  bookmarksopen=true}
+
+% Při používání citačního stylu csplainnatkiv
+% (odvozen z csplainnat, http://repo.or.cz/w/csplainnat.git)
+% lze snadno modifikovat vzhled citací v textu
+\usepackage[numbers,sort&compress]{natbib}
+
+% My custom definitions
+\graphicspath{{assets/}}
+\usepackage{epstopdf}
+\usepackage{amsfonts}
+\usepackage{tikz}
+\usepackage{pgfplots}
+\usepackage{float}
+\usepackage{amsmath}
+\usepackage{fancyvrb}
+\usepackage{multirow}
+\usepackage{arydshln}
+\usepackage{longtable}
+\usepackage[linesnumbered,lined,boxed,commentsnumbered]{algorithm2e}
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% VLASTNÍ TEXT PRÁCE
+%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{document}
+%
+\maketitle
+\tableofcontents
+
+\chapter{Introduction}
+\input{introduction.tex}
+
+\chapter{Neural Networks}\label{NN}
+\input{neural_networks.tex}
+
+\chapter{Semantic Vector Representation of Text}\label{vector_repr_chapter}
+\input{vector_representation_of_text.tex}
+
+\chapter{Stackoverflow Data}\label{dataset}
+\input{dataset.tex}
+
+\chapter{Analysis of the Problem}\label{analysis}
+\input{analysis.tex}
+
+\chapter{Results and Evaluation}\label{results}
+\input{results.tex}
+
+\chapter{Conclusion}
+\input{conclusion.tex}
+
+\chapter*{List of Abbreviations}
+\addcontentsline{toc}{chapter}{List of abbreviations}
+\input{abbreviations.tex}
+ 
+% 
+% PRO ANGLICKOU SAZBU JE NUTNÉ ZMĚNIT
+% CITAČNÍ STYL!
+%
+%\bibliographystyle{csplainnatkiv}
+\bibliographystyle{ieee}
+{\raggedright\small
+\bibliography{literatura}
+}
+
+\appendix
+
+\chapter{Results of Manual Dataset Analysis}\label{manual_analysis}
+\input{analysi_results.tex}
+
+\chapter{Script Documentation}
+\input{script_documentation.tex}
+
+\chapter{Elasticsearch and Kibana Examples}
+\input{dataset_examples.tex}
+
+\chapter{Demonstration Application}\label{demo_app}
+\input{demo_app.tex}
+
+
+\end{document}

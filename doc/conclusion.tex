@@ -1,0 +1,14 @@
+\paragraph{}
+In the scope of this work, a new dataset for semantic textual similarity was created from a Stackoverflow data dump. The dataset consists of almost $1.5$ million examples. A learning target of the dataset is to classify whether two questions are duplicates or not. In the future, we are going to release the dataset as an official TF Dataset available for the research community. Furthermore, the work proposed three different siamese neural network architectures to solve this task.
+
+\paragraph{}
+The most successful architecture reports a test f1 score of $74.1\%$, improving the f1 score by 5.1\% compared to a baseline model. Furthermore, a manual analysis of duplicate questions and errors suggests that the achieved f1 score is even better. An important feature of our design is a different encoder of code snippets in parallel to a textual encoder. This architectural element enables the network to utilize all the information stored in the data and to make more precise decisions. The proposed models in their hidden layers create a vector representation of sentences that can be obtained and used as a pre-trained sentence embedding for other tasks.
+
+\paragraph{}
+This work can be further followed by research into the usage of the obtained sentence representations by integrating them in a Stackoverflow information retrieval or code generation task. For future work, a web application for browsing and searching in the Stackoverflow data was constructed. At the moment, the application provides a standard full-text search only, but it is prepared for integrating with the vector representation based search. Screenshots of the demonstration application can be found in appendix \ref{demo_app}.
+
+\paragraph{}
+Moreover, it might be beneficial to explore the usage of self-attention models such as BERT on the created dataset. Even though it would be complicated to train BERT on the code tokens from scratch, it can be used for encoding the textual part alongside the current code encoder. Additionally, the Stackoverflow data contains questions with accepted answers, which could be utilized by another dataset with a learning objective to classify whether a post is an answer to a given question.
+
+\paragraph{}
+All source codes used in this work are accessible in a GitHub repository:\\ \url{https://github.com/janpasek97/stackoverflow-siamese-network}.
