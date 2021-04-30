@@ -69,7 +69,7 @@ tensorflow-metadata==0.14.0
 termcolor==1.1.0
 tf-estimator-nightly==1.14.0.dev2019080601
 tqdm==4.35.0
-urllib3==1.25.3
+urllib3==1.25.8
 webencodings==0.5.1
 Werkzeug==0.15.6
 wkhtmltopdf==0.2
