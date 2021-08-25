@@ -61,7 +61,7 @@ smart-open==1.9.0
 soupsieve==1.9.3
 sqlparse==0.3.0
 tensorboard==2.0.1
-tensorflow==2.0.0
+tensorflow==2.5.1
 tensorflow-datasets==1.2.0
 tensorflow-estimator==2.0.0
 tensorflow-hub==0.6.0
